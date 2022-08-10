@@ -10,7 +10,10 @@ const {
   crunchyDataBindingsMappedForOdbc,
   getPqopt,
   getSslcerts,
-  getOdbcConnectionString
+  getOdbcConnectionString,
+  getPgCrdbConnectionString,
+  getPgCrdbConnectionStringSimple,
+  getPgCrdbConnectionStringInvalidOpt
 } = require('./mappedDataBindings');
 
 const regex = /sslkey=[^}]*/i;
@@ -242,6 +245,39 @@ describe('PSQL', () => {
 
       assert(binding);
       assert.deepEqual(binding, odbcConnectionString);
+    });
+  });
+  describe('PG - CockroachDB', () => {
+    it('full connection string - ssl, options', () => {
+      const id = 'pg-crdb-bindings';
+      const connString = bindings.getBinding('POSTGRESQL', 'pg-crdb', {
+        id
+      });
+      const expected = getPgCrdbConnectionString({
+        serviceBindingRoot: process.env.SERVICE_BINDING_ROOT
+      });
+      assert(connString);
+      assert.deepEqual(connString, expected);
+    });
+
+    it('full connection string - simple', () => {
+      const id = 'pg-crdb-simple';
+      const connString = bindings.getBinding('POSTGRESQL', 'pg-crdb', {
+        id
+      });
+      const expected = getPgCrdbConnectionStringSimple();
+      assert(connString);
+      assert.deepEqual(connString, expected);
+    });
+
+    it('full connection string - invalid Db options', () => {
+      const id = 'pg-crdb-invalid-opt';
+      const connString = bindings.getBinding('POSTGRESQL', 'pg-crdb', {
+        id
+      });
+      const expected = getPgCrdbConnectionStringInvalidOpt();
+      assert(connString);
+      assert.deepEqual(connString, expected);
     });
   });
   after(() => {

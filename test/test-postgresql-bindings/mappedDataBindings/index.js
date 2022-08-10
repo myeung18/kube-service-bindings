@@ -120,11 +120,26 @@ function getOdbcConnectionString(pqopt) {
   return { connectionString: `Pqopt=${pqopt};${connectionOptions}` };
 }
 
+function getPgCrdbConnectionString({ serviceBindingRoot }) {
+  return { connectionString: `postgresql://db-user:db-pwd1@localhost:2222/db1?sslmode=verify-full&sslrootcert=${serviceBindingRoot}/pg-crdb-bindings/root.crt&options=--cluster%3Ddb-cloud%20-c%20gego=off` };
+}
+
+function getPgCrdbConnectionStringSimple() {
+  return { connectionString: 'postgresql://db-user:db-pwd1@localhost:2222/db1?sslmode=disabled' };
+}
+
+function getPgCrdbConnectionStringInvalidOpt() {
+  return { connectionString: 'postgresql://db-user:db-pwd1@localhost:2222/db1?options=-c%20opt1=val1' };
+}
+
 module.exports = {
   crunchyDB,
   crunchyDataBindingsMappedForPG,
   crunchyDataBindingsMappedForOdbc,
   postgresDataBindingsMappedForPG,
+  getPgCrdbConnectionString,
+  getPgCrdbConnectionStringSimple,
+  getPgCrdbConnectionStringInvalidOpt,
   getPqopt,
   getSslcerts,
   getOdbcConnectionString
